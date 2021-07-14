@@ -366,7 +366,7 @@ class Server extends AbstractTus
         }
 
         $checksum = $this->getClientChecksum();
-        $location = $this->getRequest()->url() . $this->getApiPath() . '/' . $uploadKey;
+        $location = $this->getUrl() . $this->getApiPath() . '/' . $uploadKey;
 
         $file = $this->buildFile([
             'name' => $fileName,
@@ -391,6 +391,11 @@ class Server extends AbstractTus
         return $this->response->send(null, HttpResponse::HTTP_CREATED, $headers);
     }
 
+    private function getUrl(): string
+    {
+        return str_replace('http', 'https', $this->request->url());
+    }
+
     /**
      * Handle file concatenation.
      *
@@ -405,7 +410,7 @@ class Server extends AbstractTus
         $uploadKey = $this->getUploadKey();
         $files     = $this->getPartialsMeta($partials);
         $filePaths = array_column($files, 'file_path');
-        $location  = $this->getRequest()->url() . $this->getApiPath() . '/' . $uploadKey;
+        $location  = $this->getUrl() . $this->getApiPath() . '/' . $uploadKey;
 
         $file = $this->buildFile([
             'name' => $fileName,
